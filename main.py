@@ -7,8 +7,7 @@ largura, altura = 700, 500
 tela = pygame.display.set_mode((largura, altura))
 relogio = pygame.time.Clock()
 
-# Cores RGB dentro do jogo
-# Plano de fundo
+# Cores RGB dentro do jogo: plano de fundo
 preto = (0, 0, 0)
 # Cor da snake
 vermelho = (255, 0, 0)
@@ -24,6 +23,18 @@ def gerar_objetivo():
     objetivo_x = round(random.randrange(0, largura - tamanho_quadrado) / 30.0) * 30.0
     objetivo_y = round(random.randrange(0, altura - tamanho_quadrado) / 30.0) * 30.0
     return objetivo_x, objetivo_y
+
+def visual_objetivo(tamanho, objetivo_x, objetivo_y):
+    pygame.draw.rect(tela, azul, [objetivo_x, objetivo_y, tamanho, tamanho])
+
+def visual_snake(tamanho, pixels):
+    for pixel in pixels:
+        pygame.draw.rect(tela, vermelho, [pixel[0], pixel[1], tamanho, tamanho])
+
+def visual_pontos(pontos):
+    fonte = pygame.font.SysFont("Arial", 30)
+    texto = fonte.render(f"Pontos: {pontos}", True, branco)
+    tela.blit(texto, [1,1])
 
 def iniciar_jogo():
     fim_jogo = False
@@ -47,5 +58,28 @@ def iniciar_jogo():
       for evento in pygame.event.get():
           if evento.type == pygame.QUIT:
               fim_jogo = True
+
+      visual_objetivo(tamanho_quadrado, objetivo_x, objetivo_y)
+      pixels.append([x, y])
+
+      if len(pixels) > tamanho_snake:
+          del pixels[0]
+
+      for pixel in pixels[:-1]:
+        if pixel == [x, y]:
+             fim_jogo = True
+
+      visual_snake(tamanho_snake, pixels)
+      visual_pontos(tamanho_snake - 1)
+
+      pygame.display.update()
+
+      if x == objetivo_x and y == objetivo_y:
+          tamanho_snake += 1
+          objetivo_x, objetivo_y = gerar_objetivo()
+
+      relogio.tick(velocidade_snake)
+
+iniciar_jogo()
 
 
