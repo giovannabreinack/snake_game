@@ -3,7 +3,7 @@ import random
 
 pygame.init()
 pygame.display.set_caption("Snake Game em Python")
-largura, altura = 700, 500
+largura, altura = 1200, 800
 tela = pygame.display.set_mode((largura, altura))
 relogio = pygame.time.Clock()
 
@@ -31,9 +31,9 @@ def visual_snake(tamanho, pixels):
     for pixel in pixels:
         pygame.draw.rect(tela, vermelho, [pixel[0], pixel[1], tamanho, tamanho])
 
-def visual_pontos(pontos):
-    fonte = pygame.font.SysFont("Arial", 30)
-    texto = fonte.render(f"Pontos: {pontos}", True, branco)
+def visual_pontos(pontuacao):
+    fonte = pygame.font.SysFont("Arial", 20)
+    texto = fonte.render(f"Pontos: {pontuacao}", True, branco)
     tela.blit(texto, [1, 1])
 
 def selecionar_velocidade(tecla):
@@ -86,8 +86,8 @@ def iniciar_jogo():
       if x < 0 or x >= largura or y < 0 or y >= altura:
           fim_jogo = True
 
-      x+= velocidade_x
-      y+= velocidade_y
+      x += velocidade_x
+      y += velocidade_y
 
       pixels.append([x, y])
 
