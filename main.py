@@ -17,11 +17,11 @@ azul = (0, 0, 255)
 branco = (255, 255, 255)
 
 # Estruturação da tela
-tamanho_quadrado = 30
+tamanho_quadrado = 20
 velocidade_snake = 15
 def gerar_objetivo():
-    objetivo_x = round(random.randrange(0, largura - tamanho_quadrado) / 30.0) * 30.0
-    objetivo_y = round(random.randrange(0, altura - tamanho_quadrado) / 30.0) * 30.0
+    objetivo_x = round(random.randrange(0, largura - tamanho_quadrado) / 20.0) * 20.0
+    objetivo_y = round(random.randrange(0, altura - tamanho_quadrado) / 20.0) * 20.0
     return objetivo_x, objetivo_y
 
 def visual_objetivo(tamanho, objetivo_x, objetivo_y):
@@ -34,7 +34,27 @@ def visual_snake(tamanho, pixels):
 def visual_pontos(pontos):
     fonte = pygame.font.SysFont("Arial", 30)
     texto = fonte.render(f"Pontos: {pontos}", True, branco)
-    tela.blit(texto, [1,1])
+    tela.blit(texto, [1, 1])
+
+def selecionar_velocidade(tecla):
+
+        if tecla == pygame.K_DOWN:
+            velocidade_x = 0
+            velocidade_y = tamanho_quadrado
+
+        elif tecla == pygame.K_UP:
+                velocidade_x = 0
+                velocidade_y = -tamanho_quadrado
+
+        elif tecla == pygame.K_RIGHT:
+            velocidade_x = tamanho_quadrado
+            velocidade_y = 0
+
+        elif tecla == pygame.K_LEFT:
+            velocidade_x = -tamanho_quadrado
+            velocidade_y = 0
+
+        return velocidade_x, velocidade_y
 
 def iniciar_jogo():
     fim_jogo = False
@@ -58,8 +78,17 @@ def iniciar_jogo():
       for evento in pygame.event.get():
           if evento.type == pygame.QUIT:
               fim_jogo = True
+          elif evento.type == pygame.KEYDOWN:
+              velocidade_x, velocidade_y = selecionar_velocidade(evento.key)
 
       visual_objetivo(tamanho_quadrado, objetivo_x, objetivo_y)
+
+      if x < 0 or x >= largura or y < 0 or y >= altura:
+          fim_jogo = True
+
+      x+= velocidade_x
+      y+= velocidade_y
+
       pixels.append([x, y])
 
       if len(pixels) > tamanho_snake:
@@ -69,7 +98,8 @@ def iniciar_jogo():
         if pixel == [x, y]:
              fim_jogo = True
 
-      visual_snake(tamanho_snake, pixels)
+
+      visual_snake(tamanho_quadrado, pixels)
       visual_pontos(tamanho_snake - 1)
 
       pygame.display.update()
@@ -81,5 +111,6 @@ def iniciar_jogo():
       relogio.tick(velocidade_snake)
 
 iniciar_jogo()
+
 
 
